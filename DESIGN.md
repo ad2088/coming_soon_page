@@ -1,0 +1,3 @@
+# Design
+
+This generic coming soon page uses an editorial composition: large left-aligned typography opposite a moving 3D orbital sculpture. Native WebGL renders three metallic rings around an orange core with studio lighting and subtle pointer response. On mobile, the artwork stacks below the introduction. Palette: warm paper #eeeae2, ink #292e29, muted text #60635b, rust #b44224, and sun #e96536. No brand-specific copy, forms, launch dates, or third-party dependencies. Display type mixes a clean sans serif with an italic Georgia closing word. A pause/play control supports visitors who want stillness; reduced-motion preferences start paused. Offscreen animation stops. A CSS sunrise is the non-WebGL fallback.
