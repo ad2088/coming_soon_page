@@ -3,10 +3,10 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
-const output = path.join(root, 'DIST');
+const output = path.join(root, 'dist');
 await rm(output, { recursive: true, force: true });
 await mkdir(output, { recursive: true });
 for (const file of ['index.html', 'styles.css', 'scene.js', 'favicon.svg', '_headers', 'robots.txt']) {
   await cp(path.join(root, file), path.join(output, file));
 }
-console.log('Built static site in DIST/');
+console.log('Built static site in dist/');

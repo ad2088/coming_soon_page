@@ -11,11 +11,11 @@ Use these settings when connecting this repository:
 | Production branch | `main` |
 | Framework preset | `None` |
 | Build command | `npm run build` |
-| Build output directory | `DIST` |
+| Build output directory | `dist` |
 | Root directory | Leave blank |
 | Environment variables | None required |
 
-`DIST` is uppercase and case-sensitive. Enter `npm run build`, not just `build`: Cloudflare executes a shell command and must invoke the npm script. If a previous setup used `dist`, update the dashboard field to `DIST`.
+The output directory is lowercase `dist`, matching the Cloudflare Pages dashboard. Directory names are case-sensitive on Cloudflare. Enter `npm run build`, not just `build`: Cloudflare executes a shell command and must invoke the npm script.
 
 Build with Node.js 22 or newer:
 
@@ -24,7 +24,7 @@ npm run build
 npm run preview
 ```
 
-Open http://127.0.0.1:4173. For source development use `npm run dev`. No installation step is necessary because the project has no dependencies. The generated `DIST` folder is ignored by Git; Cloudflare creates it during each build.
+Open http://127.0.0.1:4173. For source development use `npm run dev`. No installation step is necessary because the project has no dependencies. The generated `dist` folder is ignored by Git; Cloudflare creates it during each build.
 
 ## Reuse
 

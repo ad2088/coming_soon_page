@@ -8,7 +8,7 @@ web
 
 ## Stack
 
-Dependency-free static HTML/CSS with a Node build script producing DIST. The user confirmed a generic page reusable for everyone.
+Dependency-free static HTML/CSS with a Node build script producing lowercase dist, matching the active Cloudflare Pages configuration. The user confirmed a generic page reusable for everyone.
 
 ## Product Purpose
 
@@ -16,7 +16,7 @@ Provide a coming soon page in ad2088/coming_soon_page, ready for Cloudflare Page
 
 ## Capabilities and Constraints
 
-The user requested development and a push to GitHub. Their screenshot shows production branch main and framework None. Their follow-up requests output directory DIST and a visually stunning, fresh, modern design with moving 3D animation. Use only the in-app browser for verification. Keep content generic without a brand, contact address, or invented launch date. No email collection or countdown is requested.
+The user requested development and a push to GitHub. Their screenshot shows production branch main and framework None. Their deployment log confirms Cloudflare expects lowercase dist; keep the build output and preview script aligned with that configuration. They requested a visually stunning, fresh, modern design with moving 3D animation. Use only the in-app browser for verification. Keep content generic without a brand, contact address, or invented launch date. No email collection or countdown is requested.
 
 ## Users
 
