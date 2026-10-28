@@ -1,4 +1,4 @@
-// A small, dependency-free WebGL sculpture. No network requests or external assets.
+// Native WebGL sculpture: beveled sheets that fan open, hold, and restack.
 const canvas = document.querySelector('#scene');
 const container = document.querySelector('.sculpture');
 const toggle = document.querySelector('.motion-toggle');
@@ -34,14 +34,14 @@ function createScene() {
       float diffuse = max(dot(n, key), 0.0);
       float secondary = max(dot(n, fill), 0.0);
       vec3 reflected = reflect(-view, n);
-      float studio = smoothstep(0.48, 0.72, dot(reflected, normalize(vec3(-0.5, 1.0, 0.6))));
-      float stripe = pow(max(dot(n, normalize(key + view)), 0.0), 65.0);
+      float studio = smoothstep(0.1, 0.85, dot(reflected, normalize(vec3(-0.5, 1.0, 0.6))));
+      float stripe = pow(max(dot(n, normalize(key + view)), 0.0), 28.0);
       float edge = pow(1.0 - max(dot(n, view), 0.0), 3.0);
-      vec3 base = color * (0.24 + diffuse * 0.65 + secondary * 0.2);
-      base = mix(base, color * (0.26 + studio * 0.9), metal * 0.65);
-      base += vec3(1.0, 0.94, 0.83) * stripe * (0.48 + metal * 0.45);
-      base += vec3(0.77, 0.8, 0.73) * edge * (0.08 + metal * 0.24);
-      gl_FragColor = vec4(pow(base, vec3(0.88)), 1.0);
+      vec3 base = color * (0.42 + diffuse * 0.46 + secondary * 0.16);
+      base = mix(base, color * (0.55 + studio * 0.5), metal * 0.45);
+      base += vec3(1.0, 0.94, 0.99) * stripe * (0.13 + metal * 0.24);
+      base += vec3(0.85, 0.80, 1.0) * edge * 0.13;
+      gl_FragColor = vec4(pow(base, vec3(0.94)), 1.0);
     }
   `;
   function shader(type, source) {
@@ -84,19 +84,24 @@ function createScene() {
     gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(indices), gl.STATIC_DRAW);
     return { buffer, index, count: indices.length };
   }
-  const tau = Math.PI * 2;
-  const ring = mesh(96, 20, (u, v) => {
-    const a = u * tau, b = v * tau;
-    const r = 1.58 + 0.135 * Math.cos(b);
-    return [r * Math.cos(a), r * Math.sin(a), 0.135 * Math.sin(b), Math.cos(b) * Math.cos(a), Math.cos(b) * Math.sin(a), Math.sin(b)];
-  });
-  const core = mesh(40, 56, (u, v) => {
-    const a = u * Math.PI, b = -v * tau;
-    const x = Math.sin(a) * Math.cos(b), y = Math.cos(a), z = Math.sin(a) * Math.sin(b);
-    return [x * .76, y * .76, z * .76, x, y, z];
-  });
-  // Column-major rotation matrices; only rigid transforms are used for normals.
-  const identity = () => [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  const halfSize = [1.0, 1.22, .075];
+  const bevel = .045;
+  const faces = [
+    { axis: 2, sign: 1, u: [1,0,0], v: [0,1,0] },
+    { axis: 2, sign: -1, u: [-1,0,0], v: [0,1,0] },
+    { axis: 0, sign: 1, u: [0,0,-1], v: [0,1,0] },
+    { axis: 0, sign: -1, u: [0,0,1], v: [0,1,0] },
+    { axis: 1, sign: 1, u: [1,0,0], v: [0,0,-1] },
+    { axis: 1, sign: -1, u: [1,0,0], v: [0,0,1] },
+  ].map(face => mesh(24, 24, (u, v) => {
+    const p = halfSize.map((extent, i) => i === face.axis ? extent * face.sign : extent * (face.u[i] * (u * 2 - 1) + face.v[i] * (v * 2 - 1)));
+    const inner = p.map((value, i) => Math.max(-halfSize[i] + bevel, Math.min(halfSize[i] - bevel, value)));
+    const delta = p.map((value, i) => value - inner[i]);
+    const length = Math.hypot(...delta);
+    const normal = delta.map(value => value / length);
+    return [...inner.map((value, i) => value + normal[i] * bevel), ...normal];
+  }));
+  // Column-major rigid transforms preserve surface normals.
   function multiply(a, b) {
     const out = new Array(16).fill(0);
     for (let c = 0; c < 4; c++) for (let r = 0; r < 4; r++) for (let k = 0; k < 4; k++) out[c * 4 + r] += a[k * 4 + r] * b[c * 4 + k];
@@ -129,12 +134,22 @@ function createScene() {
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     const f = 1 / Math.tan(38 * Math.PI / 360), near = .1, far = 40;
     gl.uniformMatrix4fv(uniforms.projection, false, [f,0,0,0, 0,f,0,0, 0,0,(far+near)/(near-far),-1, 0,0,2*far*near/(near-far),0]);
-    const group = rotation(.2 + pointer.currentY, time * .16 + pointer.currentX, -.25);
-    group[13] = .10 + Math.sin(time * .65) * .10;
-    draw(core, group, [.91, .31, .13], .16);
-    draw(ring, multiply(group, rotation(1.08, .35, time * .11)), [.69, .72, .64], .95);
-    draw(ring, multiply(group, rotation(-.6, 1.08, -.25 - time * .09)), [.72, .28, .13], .8);
-    draw(ring, multiply(group, rotation(.2, -.55, 1.15 + time * .07)), [.24, .30, .25], .88);
+    const cycle = (time % 8) / 8;
+    const ease = value => value * value * (3 - 2 * value);
+    const spread = cycle < .16 ? 0 : cycle < .42 ? ease((cycle - .16) / .26) : cycle < .63 ? 1 : cycle < .92 ? 1 - ease((cycle - .63) / .29) : 0;
+    const group = rotation(-.18 + pointer.currentY, -.38 + pointer.currentX + Math.sin(time * .3) * .06, -.12);
+    group[13] = .12 + Math.sin(time * .45) * .045;
+    const layers = [
+      { x: .40 + spread * .35, y: .20 + spread * .10, z: -.48, angle: -.17 - spread * .14, color: [.97, .76, .60] },
+      { x: .02, y: .03, z: 0, angle: .04, color: [.96, .94, .91] },
+      { x: -.38 - spread * .35, y: -.18 - spread * .10, z: .48 + spread * .06, angle: .19 + spread * .14, color: [.75, .66, .89] },
+    ];
+    for (const layer of layers) {
+      const local = rotation(0, 0, layer.angle);
+      local[12] = layer.x; local[13] = layer.y; local[14] = layer.z;
+      const model = multiply(group, local);
+      for (const face of faces) draw(face, model, layer.color, .05);
+    }
   }
   function animate(stamp) {
     frame = 0;
@@ -161,8 +176,8 @@ function createScene() {
   container.addEventListener('pointermove', event => {
     if (event.pointerType !== 'mouse' || paused) return;
     const rect = container.getBoundingClientRect();
-    pointer.x = ((event.clientX - rect.left) / rect.width - .5) * .5;
-    pointer.y = ((event.clientY - rect.top) / rect.height - .5) * .3;
+    pointer.x = ((event.clientX - rect.left) / rect.width - .5) * .2;
+    pointer.y = ((event.clientY - rect.top) / rect.height - .5) * .12;
   });
   container.addEventListener('pointerleave', () => { pointer.x = 0; pointer.y = 0; });
   document.addEventListener('visibilitychange', () => document.hidden ? stop() : start());

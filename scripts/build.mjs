@@ -9,4 +9,5 @@ await mkdir(output, { recursive: true });
 for (const file of ['index.html', 'styles.css', 'scene.js', 'favicon.svg', '_headers', 'robots.txt']) {
   await cp(path.join(root, file), path.join(output, file));
 }
+await cp(path.join(root, 'assets'), path.join(output, 'assets'), { recursive: true });
 console.log('Built static site in dist/');

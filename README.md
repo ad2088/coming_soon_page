@@ -1,6 +1,6 @@
 # Coming soon
 
-A generic, responsive coming soon page with a warm neutral palette, large typography, and a moving 3D sculpture. No dependencies, external services, or tracking.
+A generic, responsive coming soon page with a bright neutral palette, self-hosted Manrope typography, and three floating 3D sheets in lavender, ivory, and peach. No package dependencies, external services, or tracking.
 
 ## Cloudflare Pages
 
@@ -30,4 +30,6 @@ Open http://127.0.0.1:4173. For source development use `npm run dev`. No install
 
 The default page works for any brand. Edit the title, description, heading, and body copy in `index.html`; adjust the palette using the custom properties at the top of `styles.css`. There is no invented launch date, countdown, or inactive signup form.
 
-The 3D sculpture uses native WebGL with studio lighting, three rotating metallic rings, an orange core, and subtle pointer response. A pause/play button controls animation. Reduced-motion preferences start the sculpture paused, and rendering stops when the tab or sculpture is out of view. A CSS sunrise remains available when WebGL is unsupported. All assets are served from this repository. `_headers` adds Cloudflare Pages security headers.
+The 3D sculpture uses native WebGL with studio lighting and lightly beveled sheets that fan open, hold, and restack over an eight-second sequence. Pointer movement adds slight perspective. A pause/play button controls animation. Reduced-motion preferences start the sculpture paused, and rendering stops when the tab or sculpture is out of view. A static CSS horizon remains available when WebGL is unsupported. All assets are served from this repository. `_headers` adds Cloudflare Pages security headers, including a same-origin font policy.
+
+The design adapts the warm canvas, typography discipline, and pastel 3D direction from the [Clay analysis in awesome-design-md](https://github.com/voltagent/awesome-design-md/blob/main/design-md/clay/DESIGN.md). The Manrope variable font comes from [Google Fonts](https://github.com/google/fonts/tree/main/ofl/manrope); its SIL Open Font License is included in `assets/OFL-Manrope.txt`.

@@ -21,3 +21,7 @@ The user requested development and a push to GitHub. Their screenshot shows prod
 ## Users
 
 Assumption: visitors arriving before the full website is available.
+
+## Design Feedback
+
+Use the appropriate design guidance from voltagent/awesome-design-md for a fresh, modern, refined 3D experience. The user explicitly disliked the organic knot animation and found it unpleasant. They found the initial geometric drift too subtle; use clean geometric forms with a visibly choreographed motion sequence. The user confirmed the connected live domain as https://www.sudarshanstationery.com/; the page must remain generic and reusable.

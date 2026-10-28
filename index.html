@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#eeeae2" />
+    <meta name="theme-color" content="#faf9f6" />
     <meta name="description" content="Something good is on the horizon. Our new website is coming soon. Thank you for being here." />
     <meta property="og:type" content="website" />
     <meta property="og:title" content="Something good is coming." />
@@ -11,6 +11,7 @@
     <meta property="og:locale" content="en_US" />
     <title>Something good is coming.</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href="/assets/manrope-variable.ttf" as="font" type="font/ttf" crossorigin />
     <link rel="stylesheet" href="/styles.css" />
     <script type="module" src="/scene.js"></script>
   </head>
@@ -52,14 +53,11 @@
           </button>
         </div>
 
-        <div class="launch-note">
-          <span class="note-rule" aria-hidden="true"></span>
-          <p>A little patience.<br /><strong>A whole new perspective.</strong></p>
-        </div>
       </main>
 
       <footer class="footer">
-        <p class="coming-soon">Coming soon<span aria-hidden="true"> ↗</span></p>
+        <p class="coming-soon">Coming soon<svg viewBox="0 0 20 20" width="18" height="18" fill="none" aria-hidden="true"><path d="M5 15 15 5M5 5h10v10" stroke="currentColor" stroke-width="1.5"/></svg></p>
+        <p class="launch-note">A little patience.<br /><strong>A whole new perspective.</strong></p>
         <p>Thanks for being here.<br /><span>It’s just the beginning.</span></p>
       </footer>
     </div>
